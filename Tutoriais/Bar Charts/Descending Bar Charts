@@ -1,1 +1,91 @@
+#importing all the necessary libraries
+from matplotlib import pyplot as plt
+import pandas as pd
+import matplotlib.ticker as mtick
+from highlight_text import ax_text,fig_text
+from matplotlib import font_manager as fm, rcParams
+import os
 
+#reading and checking the data
+df = pd.read_csv('Line Breaks.csv')
+df.head()
+
+#sorting by column and visualizing the top 20 values
+df = df.sort_values(by='LBAtt', ascending = False)
+df.head(20)
+
+#filtering (select value at pos 20) and inverting - sometimes 
+df = df.loc[(df['LBAtt'] > 61)]
+df = df.sort_values(by='LBAtt', ascending = True)
+df
+
+#PLOTTING THE CHART
+labels = (df['Player'])
+value1 = df['LBAtt']
+height = 0.8
+line_color = 'silver'
+background = "white"
+
+#using fonts previously installed: calling path location
+fpath = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\Futebol\Analytics\Fontes\static\Montserrat-Bold.ttf")
+prop = fm.FontProperties(fname = fpath)   
+
+#setting global font, color, etc
+plt.rcParams['font.family'] = 'Candara'
+plt.rcParams['font.weight'] = 'bold'
+plt.rcParams['text.color'] = 'black'
+plt.rcParams['axes.facecolor'] = background
+
+#creating a figure - leaving spaces after the labels to plot images
+fig, ax = plt.subplots(figsize=(8, 12), facecolor = background) 
+ax.barh(y = '      ' + labels +'                       ', width = value1, 
+        height=height, edgecolor='#CFD6D5', color = '#8A1538')
+
+#value annotations
+for p in ax.patches:
+    width = p.get_width()
+    plt.text(-5+p.get_width(), p.get_y()+0.50*p.get_height(), '{:1.0f}'.format(width),
+             fontsize = 14, c = 'white', ha='center', va='center')
+
+#setting labels and limits
+ax.set(xlabel="Line Breaks", xlim=(0, 90))
+    
+#setting grids and spines
+ax.grid(color=line_color, linestyle='--', linewidth=1, alpha=0.5) #axis = 'x'
+ax.set_axisbelow(b = True)
+
+for spine in ["top", "right"]:
+    ax.spines[spine].set_visible(False)
+    ax.spines[spine].set_color('#8A1538')
+
+#setting tick frequency
+ax.xaxis.set_ticks(range(0, 90, 10))
+    
+plt.yticks(color='#8A1538')
+ax.xaxis.label.set(fontsize=12, fontweight='bold', color = '#8A1538')
+    
+ax.set_position([0.08, 0.08, 0.82, 0.78]) ## make space for the title on top of the axes
+    
+fpath = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\Futebol\Analytics\Fontes\static\Montserrat-Regular.ttf")
+prop = fm.FontProperties(fname = fpath)    
+
+#text annotations
+fig.text(x=0.0, y=0.90, s="\nLINE BREAKS ATTEMPTED", fontsize = 20, 
+         fontproperties = prop, color = '#8A1538')
+fig.text(x=0.0, y=0.88, s="Group Stage", fontsize = 12, 
+         fontproperties = prop, color = '#8A1538')
+fig.text(x=0.66, y=0.035, s="By: Your Name | Data: FBRef (D/M/Y)", fontsize = 8.5, color = '#8A1538')
+
+#plotting images - repeat for each image, changing location ([x, y, size, size])
+ax_logo = fig.add_axes([0.02,0.79,0.04,0.04])
+ax_logo.axis('off')
+im = plt.imread('ALE.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.60,0.85,0.08,0.08])
+ax_logo.axis('off')
+im = plt.imread('Qatar 22.png')
+ax_logo.imshow(im)
+
+#saving the image
+plt.savefig('2.3 Line Breaks Att (GS).jpg',bbox_inches = 'tight')
