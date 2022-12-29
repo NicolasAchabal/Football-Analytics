@@ -53,13 +53,10 @@ for index, row in df.iterrows():
 
 #text annotations
 plt.title("YOUR TITLE",fontsize = 16, fontproperties = prop1, pad = 30, color = '#8A1538')
-ax.text(5.0, 10.75, s = 'Group Stage', fontsize=12, fontproperties = prop1, color = '#8A1538')
+ax.text(5.0, 10.75, s = 'Subtitle', fontsize=12, fontproperties = prop1, color = '#8A1538')
 ax.set_xlabel("Expected Goals", fontproperties = prop, color = '#8A1538')
 ax.set_ylabel("Expected Goals Against", fontproperties = prop, color = '#8A1538')
-#ax.text(65, 47.5, "Média", size = "10")
-#ax.text(62.5,40.0,"Clubes nessa região criam\n bastante e sofrem pouco", size = "10", color = 'red')
-#ax.text(34.0,36.0,"Clubes nessa região criam\n   pouco e sofrem pouco", size = "10", color = 'red')
-#ax.text(37.5,58.0,"Clubes nessa região criam\n pouco e sofrem bastante", size = "10", color = 'red')
+#ax.text(65, 47.5, "Average", size = "10")
 ax.text(8.2,-0.75,"By: Your Name | Data: FBRef (D/M/Y)", size="8", fontproperties = prop1, color = '#8A1538')
 
 #saving the figure
