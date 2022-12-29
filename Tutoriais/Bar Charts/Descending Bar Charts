@@ -36,7 +36,7 @@ plt.rcParams['font.weight'] = 'bold'
 plt.rcParams['text.color'] = 'black'
 plt.rcParams['axes.facecolor'] = background
 
-#creating a figure - leaving spaces after the labels to plot images
+#creating a figure - leaving space after the labels to plot images
 fig, ax = plt.subplots(figsize=(8, 12), facecolor = background) 
 ax.barh(y = '      ' + labels +'                       ', width = value1, 
         height=height, edgecolor='#CFD6D5', color = '#8A1538')
