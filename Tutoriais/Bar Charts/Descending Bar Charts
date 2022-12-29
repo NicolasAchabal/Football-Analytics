@@ -70,9 +70,9 @@ fpath = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\
 prop = fm.FontProperties(fname = fpath)    
 
 #text annotations
-fig.text(x=0.0, y=0.90, s="\nLINE BREAKS ATTEMPTED", fontsize = 20, 
+fig.text(x=0.0, y=0.90, s="YOUR TITLE", fontsize = 20, 
          fontproperties = prop, color = '#8A1538')
-fig.text(x=0.0, y=0.88, s="Group Stage", fontsize = 12, 
+fig.text(x=0.0, y=0.88, s="Sub Title", fontsize = 12, 
          fontproperties = prop, color = '#8A1538')
 fig.text(x=0.66, y=0.035, s="By: Your Name | Data: FBRef (D/M/Y)", fontsize = 8.5, color = '#8A1538')
 
