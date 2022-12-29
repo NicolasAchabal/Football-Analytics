@@ -1,1 +1,66 @@
+#importing all the necessary libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from adjustText import adjust_text
+from highlight_text import fig_text
+import plotly.express as px
+from matplotlib import font_manager as fm, rcParams
+import os
 
+#reading and checking the data
+df = pd.read_csv("expectedgoals.csv")
+df.head()
+
+#adding a new column: use the same name (Squad) for the corresponding images
+df['path'] = df['Squad'] + '.png'
+df.head()
+
+#PLOTTING THE CHART
+line_color = "#8A1538"
+background = 'white'
+
+#using fonts previously installed: calling path location
+fpath = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\Futebol\Analytics\Fontes\static\Montserrat-Bold.ttf")
+prop = fm.FontProperties(fname = fpath)  
+
+fpath1 = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\Futebol\Analytics\Fontes\static\Montserrat-Regular.ttf")
+prop1 = fm.FontProperties(fname = fpath1)
+
+#creating a figure
+fig, ax = plt.subplots(figsize=(12, 8), dpi=120)
+fig.set_facecolor(background)
+ax.scatter(df['xG'], df['xGA'])
+    
+#adding average lines
+plt.hlines(df['xGA'].mean(), df['xG'].min(), df['xG'].max(), color = line_color, linestyle = ":", lw=1)
+plt.vlines(df['xG'].mean(), df['xGA'].min(), df['xGA'].max(), color = line_color, linestyle = ":", lw=1)
+    
+#removing spines
+for spine in ["top", "right"]:
+    ax.spines[spine].set_visible(False)
+    ax.spines[spine].set_color(line_color)
+        
+#ploting images
+def getImage(path):
+    return OffsetImage(plt.imread(path), zoom=.175, alpha = 0.80)
+
+for index, row in df.iterrows():
+    ab = AnnotationBbox(getImage(row['path']), (row['xG'], row['xGA']), frameon=False)
+    ax.add_artist(ab)
+
+#text annotations
+plt.title("YOUR TITLE",fontsize = 16, fontproperties = prop1, pad = 30, color = '#8A1538')
+ax.text(5.0, 10.75, s = 'Group Stage', fontsize=12, fontproperties = prop1, color = '#8A1538')
+ax.set_xlabel("Expected Goals", fontproperties = prop, color = '#8A1538')
+ax.set_ylabel("Expected Goals Against", fontproperties = prop, color = '#8A1538')
+#ax.text(65, 47.5, "Média", size = "10")
+#ax.text(62.5,40.0,"Clubes nessa região criam\n bastante e sofrem pouco", size = "10", color = 'red')
+#ax.text(34.0,36.0,"Clubes nessa região criam\n   pouco e sofrem pouco", size = "10", color = 'red')
+#ax.text(37.5,58.0,"Clubes nessa região criam\n pouco e sofrem bastante", size = "10", color = 'red')
+ax.text(8.2,-0.75,"By: Your Name | Data: FBRef (D/M/Y)", size="8", fontproperties = prop1, color = '#8A1538')
+
+#saving the figure
+plt.savefig('Expected Goals Graph.png')
