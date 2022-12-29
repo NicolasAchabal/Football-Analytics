@@ -1,1 +1,180 @@
+#importing all the necessary libraries
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.patches as patches
+from matplotlib import pyplot as plt
+from highlight_text import fig_text
+from matplotlib import font_manager as fm, rcParams
+import os
 
+#reading and checking the data
+df = pd.read_csv('Ações Defensivas.csv')
+df.head()
+
+#sorting by column and visualizing the top 10 values
+df = df.sort_values(by='DefActions', ascending = False)
+df.head(10)
+
+#manually imputing the data
+data = [
+        {'id': 'Partey', 'Tkl': 9, 'Blocks' : 8, 'Int': 0, 'Clr': 8, 'Rec': 21, 'DA': 46},
+        {'id': 'Meriah', 'Tkl': 4, 'Blocks' : 5, 'Int': 1, 'Clr': 20, 'Rec': 16, 'DA': 46},
+        {'id': 'Yoshida', 'Tkl': 3, 'Blocks' : 5, 'Int': 2, 'Clr': 16, 'Rec': 21, 'DA': 47},
+        {'id': 'Adams', 'Tkl': 10, 'Blocks' : 4, 'Int': 3, 'Clr': 5, 'Rec': 26, 'DA': 48},
+        {'id': 'Hosseini', 'Tkl': 7, 'Blocks' : 3, 'Int': 6, 'Clr': 11, 'Rec': 22, 'DA': 49},
+        {'id': 'Milenkovic', 'Tkl': 10, 'Blocks' : 6, 'Int': 6, 'Clr': 10, 'Rec': 18, 'DA': 50},
+        {'id': 'A. Mooy', 'Tkl': 8, 'Blocks' : 6, 'Int': 3, 'Clr': 7, 'Rec': 26, 'DA': 50},
+        {'id': 'Gvardiol', 'Tkl': 4, 'Blocks' : 4, 'Int': 5, 'Clr': 17, 'Rec': 22, 'DA': 52},
+        {'id': 'Koulibaly', 'Tkl': 8, 'Blocks' : 2, 'Int': 2, 'Clr': 25, 'Rec': 19, 'DA': 56},
+        {'id': 'Bentancur', 'Tkl': 9, 'Blocks' : 3, 'Int': 7, 'Clr': 5, 'Rec': 35, 'DA': 59},
+]
+
+#PLOTTING THE CHART
+background = 'white'
+
+#using fonts previously installed: calling path location
+fpath = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\Futebol\Analytics\Fontes\static\Montserrat-Bold.ttf")
+prop = fm.FontProperties(fname = fpath)  
+
+fpath1 = os.path.join(rcParams['datapath'], r"C:\Users\nmach\OneDrive\Documentos\Futebol\Analytics\Fontes\static\Montserrat-Regular.ttf")
+prop1 = fm.FontProperties(fname = fpath1)
+
+#creating a figure
+fig, ax = plt.subplots(figsize=(12,10))
+fig.set_facecolor(background)
+
+#setting the number of rows and cols for our table
+rows = 10
+cols = 7
+
+#creating a coordinate system based on the number of rows/columns
+#adding a bit of padding on bottom (-1), top (1), right (0.5)
+ax.set_ylim(-1, rows + 1)
+ax.set_xlim(0, cols + .5)
+
+#from the sample data, each dict in the list represents one row
+#each key in the dict represents a column
+
+#extracting the row data from the list
+for row in range(rows):
+    d = data[row]
+    
+    #the y (row) coordinate is based on the row index (loop)
+    #the x (column) coordinate is defined based on the order I want to display the data in
+
+    #player name column
+    ax.text(x=1, y=row, s=d['id'], va='center', ha='center', fontproperties = prop1, fontsize = 12)
+    ax.text(x=2, y=row, s=d['Tkl'], va='center', ha='center', fontproperties = prop1, fontsize = 13)
+    ax.text(x=3, y=row, s=d['Blocks'], va='center', ha='center', fontproperties = prop1, fontsize = 13)
+    ax.text(x=4, y=row, s=d['Int'], va='center', ha='center', fontproperties = prop1, fontsize = 13)
+    ax.text(x=5, y=row, s=d['Clr'], va='center', ha='center', fontproperties = prop1, fontsize = 13)
+    ax.text(x=6, y=row, s=d['Rec'], va='center', ha='center', fontproperties = prop1, fontsize = 13)
+    ax.text(x=7, y=row, s=d['DA'], va='center', ha='center', fontproperties = prop1, fontsize = 13)
+    
+    #adding column headers
+    #plotting them at height y=9.75 to decrease the space to the first data row
+
+ax.text(1, 9.75, 'Player', ha='center', fontproperties = prop, fontsize = 10)
+ax.text(2, 9.75, 'Tackles\nAttempted', ha='center', fontproperties = prop, fontsize = 10)
+ax.text(3, 9.75, 'Blocks', ha='center', fontproperties = prop, fontsize = 10)
+ax.text(4, 9.75, 'Interceptions', ha='center', fontproperties = prop, fontsize = 10)
+ax.text(5, 9.75, 'Clearances', weight='bold', ha='center', fontproperties = prop, fontsize = 10)
+ax.text(6, 9.75, 'Recoveries', weight='bold', ha='center', fontproperties = prop, fontsize = 10)
+ax.text(7, 9.75, 'Total\nActions', weight='bold', ha='center', fontproperties = prop, fontsize = 10)
+
+for row in range(rows):
+    ax.plot(
+        [0, cols + 1],
+        [row -.5, row - .5],
+        ls=':',
+        lw='.5',
+        c='grey'
+    )
+
+#adding a main header divider
+
+ax.plot([0, cols + 1], [9.5, 9.5], lw='.5', c='black')
+
+#highlighting the column by using a rectangle patch
+rect = patches.Rectangle(
+    (6.675, -0.5),  #bottom left starting position (x,y)
+    .65, #width
+    10,  #height
+    ec='black',
+    fc='#add8e6',
+    alpha=.2,
+    zorder=-1
+)
+ax.add_patch(rect)
+
+#removing the axis
+ax.axis('off')
+
+#text annotations
+fig_text(x = 0.10, y = 0.92, s = "YOUR TITLE",
+    ha = 'left', fontsize=18, fontproperties = prop1, color = '#8A1538')
+    
+fig_text(x = 0.10, y = 0.88, s = 'Subtitle',
+    ha = 'left', fontsize=13, fontproperties = prop1, color = '#8A1538')
+    
+fig_text(0.65,0.14,'By: Your Name | Data: FBRef (D/M/Y)',
+    fontsize=9, fontproperties = prop, color = '#8A1538')
+
+#plotting images - repeat for each image, changing location ([x, y, size, size])
+ax_logo = fig.add_axes([0.12,0.73,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('URU.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.665,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('SEN.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.60,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('CRO.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.54,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('AUS.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.475,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('SER.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.415,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('IRA.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.35,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('EUA.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.29,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('JAP.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.225,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('TUN.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.12,0.165,0.05,0.05])
+ax_logo.axis('off')
+im = plt.imread('GAN.png')
+ax_logo.imshow(im)
+
+ax_logo = fig.add_axes([0.82,0.85,0.08,0.08])
+ax_logo.axis('off')
+im = plt.imread('Qatar 22.png')
+ax_logo.imshow(im)
+
+#saving the image
+plt.savefig('Defensive Actions Table.png',bbox_inches = 'tight')
